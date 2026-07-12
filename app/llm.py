@@ -1,46 +1,28 @@
-# import os
-# import streamlit as st
-# from google import genai
-# from dotenv import load_dotenv
-#
-# load_dotenv()
-#
-# api_key = os.getenv("GOOGLE_API_KEY")
-#
-# if not api_key:
-#     api_key = st.secrets["GOOGLE_API_KEY"]
-#
-# client = genai.Client(api_key=api_key)
-#
-# MODEL_NAME = "gemini-2.5-flash"
-
 import os
-import streamlit as st
 from dotenv import load_dotenv
 from google import genai
 
+# Load environment variables from .env (for local development)
 load_dotenv()
 
+# Get API key
 api_key = os.getenv("GOOGLE_API_KEY")
 
-st.write("Environment key exists:", api_key is not None)
-
-try:
-    st.write("Secrets available:", list(st.secrets.keys()))
-except Exception as e:
-    st.write("Secrets error:", e)
+if not api_key:
+    try:
+        import streamlit as st
+        api_key = st.secrets.get("GOOGLE_API_KEY")
+    except Exception:
+        pass
 
 if not api_key:
-    api_key = st.secrets.get("GOOGLE_API_KEY", None)
+    raise ValueError("GOOGLE_API_KEY not found.")
 
-st.write("Final API key exists:", api_key is not None)
-
-if api_key:
-    st.write("API key prefix:", api_key[:8])
-
+# Initialize Gemini client
 client = genai.Client(api_key=api_key)
 
-MODEL_NAME = "MODEL_NAME = gemini-2.5-flash-lite"
+# Model name for google-genai v2.11.0
+MODEL_NAME = "gemini-3.5-flash"
 
 
 class GeminiLLM:
@@ -51,15 +33,17 @@ class GeminiLLM:
         prompt = f"""
 You are an expert Insurance Policy Assistant.
 
-Answer ONLY using the information provided in the context.
+Answer the user's question ONLY using the information provided in the context.
 
-If the context contains the answer, explain it clearly.
+If the answer can be inferred from one or more document chunks, combine the information and explain it clearly.
 
-Do NOT say "I couldn't find this information" if the answer is present, even if it is not written as a formal definition.
+Do NOT require the answer to appear as an exact sentence.
 
-If the answer is not present in the context, reply exactly:
+Only reply with:
 
 I couldn't find this information in the insurance policy.
+
+if the context contains absolutely no relevant information.
 
 -------------------------
 CONTEXT
@@ -83,4 +67,4 @@ ANSWER
             contents=prompt
         )
 
-        return response.text
+        return response.text.strip()
