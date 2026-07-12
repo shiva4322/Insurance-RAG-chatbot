@@ -1,12 +1,18 @@
-from google import genai
 import os
+import streamlit as st
+from google import genai
 from dotenv import load_dotenv
 
 load_dotenv()
 
-client = genai.Client(api_key=os.getenv("GOOGLE_API_KEY"))
+api_key = os.getenv("GOOGLE_API_KEY")
 
-MODEL_NAME = "gemini-3.5-flash"
+if not api_key:
+    api_key = st.secrets["GOOGLE_API_KEY"]
+
+client = genai.Client(api_key=api_key)
+
+MODEL_NAME = "gemini-2.5-flash"
 
 
 class GeminiLLM:
