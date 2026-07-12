@@ -1,14 +1,36 @@
-import os
+# import os
+# import streamlit as st
+# from google import genai
+# from dotenv import load_dotenv
+#
+# load_dotenv()
+#
+# api_key = os.getenv("GOOGLE_API_KEY")
+#
+# if not api_key:
+#     api_key = st.secrets["GOOGLE_API_KEY"]
+#
+# client = genai.Client(api_key=api_key)
+#
+# MODEL_NAME = "gemini-2.5-flash"
+
 import streamlit as st
-from google import genai
+import os
 from dotenv import load_dotenv
+from google import genai
 
 load_dotenv()
 
-api_key = os.getenv("GOOGLE_API_KEY")
+st.write("Environment:", os.getenv("GOOGLE_API_KEY"))
+
+st.write("Secrets keys:", list(st.secrets.keys()))
+
+api_key = os.getenv("GOOGLE_API_KEY") or st.secrets.get("GOOGLE_API_KEY")
+
+st.write("API Key Found:", api_key is not None)
 
 if not api_key:
-    api_key = st.secrets["GOOGLE_API_KEY"]
+    st.stop()
 
 client = genai.Client(api_key=api_key)
 
