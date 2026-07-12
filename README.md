@@ -246,9 +246,9 @@ screenshots/source_chunks.png
 
 AI/ML Engineer | Python Developer | Generative AI Enthusiast
 
-GitHub: https://github.com/yourusername
+GitHub: https://github.com/shiva4322
 
-LinkedIn: https://linkedin.com/in/yourprofile
+LinkedIn: https://linkedin.com/in/shivaguda/
 
 ---
 
